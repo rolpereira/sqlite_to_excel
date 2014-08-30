@@ -15,6 +15,12 @@ installed from CPAN.
 There is no need to have Microsoft Excel or LibreOffice installed on
 the machine that runs this script.
 
+If you wish the run the tests in the folder `t` you also need to have
+the following packages installed.
+
+* File::Slurp
+* Spreadsheet::Read
+
 # Installation #
 
 There is no installation, simply download the script
