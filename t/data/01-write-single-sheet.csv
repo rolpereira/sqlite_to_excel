@@ -1,0 +1,16 @@
+# The format for this CSV is a follows:
+#
+# Comments start with the "#" character. That character should be the
+# first character of the line 
+#
+# The first CSV line contains the name of the column
+#
+# The remaining lines contain the data. The fields should not have the
+# " delimiters. The field cannot have the "," character in them
+# because the CSV parser used by the tests doesn't escape the ","
+# characters and assumes that they're always a field delimiter.
+
+Names,Age
+Foo,30
+Bar,25
+Baz,27
