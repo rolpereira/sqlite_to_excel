@@ -27,6 +27,19 @@ There is no installation, simply download the script
 `sqlite_to_excel.pl` into your machine and run it using the Perl
 executable.
 
+## Running the tests ##
+
+If you want to run the integration tests for the script download the
+folder `t` into the same directory as the `sqlite_to_excel.pl` script
+and run the `prove` command on the command line:
+
+    rolando@rolando-K8NF4G-VSTA:~/src/git/sqlite_to_excel$ prove
+    t/01-write-single-sheet.t .. ok
+    All tests successful.
+    Files=1, Tests=3,  3 wallclock secs ( 0.09 usr  0.02 sys +  0.88 cusr  0.12 csys =  1.11 CPU)
+    Result: PASS
+
+
 # Usage #
 
 To run the query `SELECT info_number FROM data` against the database
