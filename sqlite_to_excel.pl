@@ -27,11 +27,11 @@ use DBD::SQLite;
 use Excel::Writer::XLSX;
 
 my $db_path;
-my $query;
+my @queries;
 my $excel_path;
 
 GetOptions("db=s"         => \$db_path,
-           "query=s"      => \$query,
+           "query=s"      => \@queries,
            "excel_path=s" => \$excel_path)
   or die "Error in command line arguments";
 
@@ -40,7 +40,7 @@ if (not $db_path) {
   die "No SQLite database was given. See the flag \"--db\"";
 }
 
-if (not $query) {
+if (not @queries) {
   usage_help();
   die "No SQL query was given. See the flag \"--query\"";
 }
@@ -56,26 +56,28 @@ if ( -e $excel_path ) {
 
 my $dbh = DBI->connect("dbi:SQLite:dbname=$db_path","","") or die $DBI::errstr;
 
-my $sth = $dbh->prepare($query) or die $DBI::errstr;
-
-$sth->execute() or die "Couldn't execute query: " . $DBI::errstr;
-
 my $workbook = Excel::Writer::XLSX->new($excel_path);
-my $worksheet = $workbook->add_worksheet();
 
-my $row_counter = 0;
+foreach my $query (@queries) {
+  my $sth = $dbh->prepare($query) or die $DBI::errstr;
 
-while (my $row = $sth->fetchrow_arrayref()) {
-  my $column_counter = 0;
+  $sth->execute() or die "Couldn't execute query: " . $DBI::errstr;
 
-  foreach my $column (@$row) {
-    $worksheet->write($row_counter, $column_counter, $column);
-    $column_counter++;
+  my $worksheet = $workbook->add_worksheet();
+
+  my $row_counter = 0;
+
+  while (my $row = $sth->fetchrow_arrayref()) {
+    my $column_counter = 0;
+
+    foreach my $column (@$row) {
+      $worksheet->write($row_counter, $column_counter, $column);
+      $column_counter++;
+    }
+
+    $row_counter++;
   }
-
-  $row_counter++;
 }
-
 print "Done\n";
 
 exit 0;
@@ -99,6 +101,17 @@ Flags:
 Example:
 
    perl $0 --db="./db.sqlite" --excel_path="./newfile.xlsx" --query="SELECT info_number FROM data"
+
+
+Note:
+
+    Multiple queries can be given. In that case the result of each query is stored in a different
+    worksheet in the excel file
+
+Example:
+
+    perl $0 --db="./db.sqlite" --excel_path="./newfile.xlsx" --query="SELECT info_number FROM data" \
+        --query="SELECT name FROM data"
 
 EOF
 
