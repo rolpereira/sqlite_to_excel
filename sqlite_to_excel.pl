@@ -51,6 +51,11 @@ if (not $excel_path) {
 }
 
 if ( -e $excel_path ) {
+  # The Excel::Writer::XLSX package doesn't work if the Excel file
+  # already exists. From the DESCRIPTION of "perldoc Excel::Writer::XLSX":
+  #
+  #     This module cannot, as yet, be used to write to an existing
+  #     Excel XLSX file.
   die "Excel file \"$excel_path\" already exists";
 }
 
